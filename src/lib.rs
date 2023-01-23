@@ -428,6 +428,8 @@ mod tests {
         };
 
         let market_output = custom_fair_matching(&market_input, 1.0, &grid_fee_matrix);
+
+        assert_eq!(market_output.matches.len(), 0);
     }
 
     #[test]

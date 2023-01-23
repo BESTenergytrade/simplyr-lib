@@ -2,7 +2,7 @@
 
 A Rust `no_std` library implementation of the BEST matching algorithm.
 
-[![CI](https://github.com/BESTenergytrade/simplyR/actions/workflows/ci.yml/badge.svg)](https://github.com/BESTenergytrade/simplyR/actions/workflows/ci.yml)
+[![CI](https://github.com/BESTenergytrade/simplyr-lib/actions/workflows/ci.yml/badge.svg)](https://github.com/BESTenergytrade/simplyr-lib/actions/workflows/ci.yml)
 
 ## Getting Started
 

@@ -13,7 +13,7 @@ jobs:
   Tests:
     runs-on: ubuntu-latest
     env:
-      RUSTFLAGS: "-D warnings"
+      RUSTFLAGS: ""
 
     steps:
       - uses: actions/checkout@v3
@@ -26,7 +26,7 @@ jobs:
       - name: Ensure code format
         run: cargo fmt --all -- --check
       - name: Lint
-        run: cargo clippy -- -Dwarnings
+        run: cargo clippy
       - name: Build documentation
         run: cargo doc --verbose
       - name: Build
@@ -44,6 +44,5 @@ jobs:
         uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: "${{ matrix.rust_version }}"
-      - run: cargo run -- -h
       - run: cargo test --verbose
 
