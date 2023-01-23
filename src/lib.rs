@@ -91,7 +91,7 @@ pub type GridFeeMatrixRaw = Vec<Vec<f64>>;
 /// add a source of confusion.
 ///
 /// ```
-/// # use rust_matching_lib::*;
+/// # use simplyr_lib::*;
 /// # fn foo() -> Result<(), String> {
 /// let json_str = "[
 ///   [0, 1, 1.2],
