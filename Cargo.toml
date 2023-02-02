@@ -2,8 +2,10 @@
 name = "simplyr-lib"
 version = "0.1.0"
 edition = "2021"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
 serde = { version = "1.0.147", default-features = false, features=["derive", "alloc"] }
 serde_json = { version = "1.0.87", default-features = false, features=["alloc"] }
 libm = "0.2.6"
+codec = { version = "3.0.0", package = "parity-scale-codec", default-features = false, features = ["derive", "full"] }

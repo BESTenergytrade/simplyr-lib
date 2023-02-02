@@ -21,7 +21,8 @@ use alloc::collections::btree_map::BTreeMap;
 use alloc::collections::btree_set::BTreeSet;
 
 // We can annotate our structs with custom derives of these traits.
-// Code for serializing and deserializing will then be generated for us.
+// e.g. code for serializing and deserializing will then be generated for us.
+use codec::{Decode, Encode};
 use serde::{Deserialize, Serialize};
 
 /// Smallest energy value (in kWh) that is used for a match.
@@ -64,7 +65,7 @@ pub struct MarketInput {
 }
 
 /// A match between a bid and an ask.
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Encode, Decode)]
 pub struct Match {
     /// The order ID of the bid
     pub bid_id: u64,
@@ -77,7 +78,7 @@ pub struct Match {
 }
 
 /// The market output contains all matches of a time slot.
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Encode, Decode)]
 pub struct MarketOutput {
     pub matches: Vec<Match>,
 }
