@@ -51,7 +51,7 @@ pub struct Order {
     pub time_slot: String,
     pub actor_id: String,
     /// A cluster index can also be `null` so we use an [`Option`] here.
-    pub cluster_index: Option<usize>,
+    pub cluster_index: Option<u32>,
     /// The amount of energy in kWh
     pub energy_kwh: f64,
     /// The price in € / kWh
@@ -108,7 +108,7 @@ pub type GridFeeMatrixRaw = Vec<Vec<f64>>;
 #[derive(Clone, Debug)]
 pub struct GridFeeMatrix {
     /// Width and height of the square matrix
-    pub size: usize,
+    pub size: u32,
     /// Fee values in a flat vector
     pub flat_matrix: Vec<f64>,
 }
@@ -135,15 +135,15 @@ impl GridFeeMatrix {
                 flat_matrix[flat_index] = value;
             }
         }
-        Ok(GridFeeMatrix { size, flat_matrix })
+        Ok(GridFeeMatrix { size: size.try_into().unwrap(), flat_matrix })
     }
 
     /// Return the fee between a source cluster and a destination cluster.
     /// Indices are zero-based.
-    pub fn lookup(&self, source_cluster_idx: usize, dest_cluster_idx: usize) -> f64 {
+    pub fn lookup(&self, source_cluster_idx: u32, dest_cluster_idx: u32) -> f64 {
         assert!(source_cluster_idx < self.size);
         assert!(dest_cluster_idx < self.size);
-        self.flat_matrix[(source_cluster_idx * self.size) + dest_cluster_idx]
+        self.flat_matrix[(source_cluster_idx * self.size) + dest_cluster_idx as usize]
     }
 }
 
@@ -203,7 +203,7 @@ pub fn pay_as_bid_matching(input: &MarketInput) -> MarketOutput {
 
 struct FairMatchingOrder {
     orig_id: u64,
-    cluster_index: usize,
+    cluster_index: u32,
     price_euro_per_kwh: f64,
     adjusted_price: f64,
 }
@@ -279,8 +279,8 @@ pub fn custom_fair_matching(
                 && order.cluster_index.is_some()
                 && filter_fn(order)
         }) {
-            let num_entries = libm::trunc(order.energy_kwh / energy_unit_kwh) as usize;
-            forders.reserve(num_entries);
+            let num_entries = libm::trunc(order.energy_kwh / energy_unit_kwh) as u32;
+            forders.reserve(num_entries.try_into().unwrap());
             // Create multiple entries - one for each full energy unit
             for _ in 0..num_entries {
                 forders.push(FairMatchingOrder {
@@ -297,11 +297,11 @@ pub fn custom_fair_matching(
     let matches = vec![];
 
     // Keep track of clusters to match. Initial value: all cluster indices
-    let mut clusters_to_match: BTreeSet<usize> = BTreeSet::from_iter(0..grid_fee_matrix.size);
+    let mut clusters_to_match: BTreeSet<u32> = BTreeSet::from_iter(0..grid_fee_matrix.size);
 
     // Map from cluster index -> set of order indices
     // TODO: Add `mut` again, so exclude can actually be used
-    let exclude: BTreeMap<usize, BTreeSet<u64>> =
+    let exclude: BTreeMap<u32, BTreeSet<u64>> =
         BTreeMap::from_iter((0..grid_fee_matrix.size).map(|x| (x, BTreeSet::new())));
 
     loop {
