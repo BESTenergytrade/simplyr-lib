@@ -33,7 +33,7 @@ fn round_energy_value(energy: f64) -> f64 {
 }
 
 /// A enumeration of the two possible order types.
-#[derive(Copy, Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Copy, Clone, Debug, Serialize, Deserialize, PartialEq, Decode)]
 pub enum OrderType {
     #[serde(rename = "bid")]
     Bid,
@@ -42,7 +42,7 @@ pub enum OrderType {
 }
 
 /// A bid or an ask for a certain amount of energy at a certain price.
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Decode)]
 pub struct Order {
     /// The order ID
     pub id: u64,
@@ -135,10 +135,7 @@ impl GridFeeMatrix {
                 flat_matrix[flat_index as usize] = value;
             }
         }
-        Ok(GridFeeMatrix {
-            size,
-            flat_matrix,
-        })
+        Ok(GridFeeMatrix { size, flat_matrix })
     }
 
     /// Return the fee between a source cluster and a destination cluster.
@@ -146,7 +143,8 @@ impl GridFeeMatrix {
     pub fn lookup(&self, source_cluster_idx: u32, dest_cluster_idx: u32) -> f64 {
         assert!(source_cluster_idx < self.size);
         assert!(dest_cluster_idx < self.size);
-        self.flat_matrix[(source_cluster_idx as usize * self.size as usize) + dest_cluster_idx as usize]
+        self.flat_matrix
+            [(source_cluster_idx as usize * self.size as usize) + dest_cluster_idx as usize]
     }
 }
 
