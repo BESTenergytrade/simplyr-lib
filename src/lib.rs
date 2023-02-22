@@ -124,18 +124,21 @@ impl GridFeeMatrix {
 
     /// Create a `GridFeeMatrix` from a `GridFeeMatrixRaw`.
     pub fn from_raw(raw: &GridFeeMatrixRaw) -> Result<Self, String> {
-        let size = raw.len();
-        let mut flat_matrix = vec![0.0; size * size];
+        let size = raw.len() as u32;
+        let mut flat_matrix = vec![0.0; size as usize * size as usize];
         for (source_cluster_idx, vec_a) in raw.iter().enumerate() {
-            if vec_a.len() != size {
+            if vec_a.len() != size as usize {
                 return Err("matrix needs to be square -> every row/column array has to have the same size.".into());
             }
             for (dest_cluster_idx, &value) in vec_a.iter().enumerate() {
-                let flat_index = (source_cluster_idx * size) + dest_cluster_idx;
-                flat_matrix[flat_index] = value;
+                let flat_index = (source_cluster_idx as u32 * size) + dest_cluster_idx as u32;
+                flat_matrix[flat_index as usize] = value;
             }
         }
-        Ok(GridFeeMatrix { size: size.try_into().unwrap(), flat_matrix })
+        Ok(GridFeeMatrix {
+            size,
+            flat_matrix,
+        })
     }
 
     /// Return the fee between a source cluster and a destination cluster.
@@ -143,7 +146,7 @@ impl GridFeeMatrix {
     pub fn lookup(&self, source_cluster_idx: u32, dest_cluster_idx: u32) -> f64 {
         assert!(source_cluster_idx < self.size);
         assert!(dest_cluster_idx < self.size);
-        self.flat_matrix[(source_cluster_idx * self.size) + dest_cluster_idx as usize]
+        self.flat_matrix[(source_cluster_idx as usize * self.size as usize) + dest_cluster_idx as usize]
     }
 }
 
