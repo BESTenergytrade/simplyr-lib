@@ -33,7 +33,7 @@ fn round_energy_value(energy: f64) -> f64 {
 }
 
 /// A enumeration of the two possible order types.
-#[derive(Copy, Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Copy, Clone, Debug, Serialize, Deserialize, PartialEq, Encode, Decode)]
 pub enum OrderType {
     #[serde(rename = "bid")]
     Bid,
@@ -42,7 +42,7 @@ pub enum OrderType {
 }
 
 /// A bid or an ask for a certain amount of energy at a certain price.
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Encode, Decode)]
 pub struct Order {
     /// The order ID
     pub id: u64,
