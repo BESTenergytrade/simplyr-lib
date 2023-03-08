@@ -33,7 +33,7 @@ fn round_energy_value(energy: f64) -> f64 {
 }
 
 /// A enumeration of the two possible order types.
-#[derive(Copy, Clone, Debug, Serialize, Deserialize, PartialEq, Encode, Decode, Eq)]
+#[derive(Copy, Clone, Debug, Serialize, Deserialize, PartialEq, Encode, Decode)]
 pub enum OrderType {
     #[serde(rename = "bid")]
     Bid,
